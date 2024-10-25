@@ -6,26 +6,24 @@ class DiscordWebhookSender:
     def __init__(self, webhook_url):
         self.webhook_url = webhook_url
 
-    def send_listing(self, listing):
-        # Tworzymy strukturę embedu w formacie JSON
+    def send_phone_listing(self, listing):
         embed = {
             "title": listing.title,
             "url": listing.url,
             "description": listing.description,
             "thumbnail": {"url": listing.image_url},
             "fields": [
-                {"name": "Cena", "value": f"{listing.price} zł", "inline": False},
+                {"name": "Stan", "value": f"{listing.state}", "inline": True},
+                {"name": "Wysyłka", "value": f"{listing.isDelivery}", "inline": True},
+                {"name": "Pamieć", "value": f"{listing.builtinmemory_phones}", "inline": True},
+                {"name": "Cena", "value": f"{listing.price} zł", "inline": True},
             ]
         }
 
         data = {
             "embeds": [embed]
         }
-
-        # Wysyłanie POST requesta do webhooka
         response = requests.post(self.webhook_url, json=data)
-
-        # Sprawdzamy, czy wysłanie powiodło się
         if response.status_code == 204:
             print("Wiadomość wysłana pomyślnie.")
         else:
