@@ -20,6 +20,7 @@ class Listing:
                                                                                                list) else ''
         self.location: str = data.get('location', {}).get('pathName', '') if data.get('location') else ''
         self.url: str = data.get('url', '') if data.get('url') else ''
+        self.isDelivery: str = 'Yes'
 
         price_data = data.get('price', {})
         if price_data and isinstance(price_data, dict):

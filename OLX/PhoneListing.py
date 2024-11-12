@@ -16,6 +16,9 @@ class PhoneListing(Listing):
         self.phonemodel: str = params_dict.get('phonemodel', '')
         self.page: str = 'OLX'  # Dodanie pola 'page', jeśli jest obecne w danych
         self.listing_id: str = data.get('id', '')  # Dodanie pola 'listingId', jeśli jest obecne w danych
+        self.isDeal: bool = self.check_is_deal()
+        self.user: str = ''
+        self.rate: str = ''
 
     def save_to_db(self, db_connection) -> None:
         """
@@ -58,3 +61,31 @@ class PhoneListing(Listing):
 
         # Zamknięcie kursora po zakończeniu operacji
         cursor.close()
+
+    def check_is_deal(self):
+        price_limits = {
+            'iphone-11': 400,
+            'iphone-11-pro': 500,
+            'iphone-11-pro-max': 700,
+            'iphone-12': 600,
+            'iphone-12-mini': 550,
+            'iphone-12-pro': 900,
+            'iphone-12-pro-max': 900,
+            'iphone-13': 1000,
+            'iphone-13-pro': 1500,
+            'iphone-13-mini': 800,
+            'iphone-14': 1400,
+            'iphone-14-pro': 2200,
+            'iphone-14-pro-max': 2400,
+            'iphone-14-plus': 1700,
+            'iphone-15': 2100,
+            'iphone-15-pro': 2850,
+            'iphone-15-pro-max': 3300,
+            'iphone-15-plus': 2400,
+            # Dodaj więcej modeli, jeśli to konieczne
+        }
+
+        # Sprawdź, czy model istnieje w słowniku i czy cena jest w limicie
+        if self.price > 0 and self.phonemodel in price_limits:
+            return self.price <= price_limits[self.phonemodel]
+        return False

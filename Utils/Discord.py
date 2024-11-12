@@ -13,10 +13,15 @@ class DiscordWebhookSender:
             "description": listing.description,
             "thumbnail": {"url": listing.image_url},
             "fields": [
-                {"name": "Stan", "value": f"{listing.state}", "inline": True},
+                {"name": "Strona", "value": f"{listing.page}", "inline": True},
                 {"name": "Wysyłka", "value": f"{listing.isDelivery}", "inline": True},
+                {"name": "Stan", "value": f"{listing.state}", "inline": True},
                 {"name": "Pamieć", "value": f"{listing.builtinmemory_phones}", "inline": True},
+                {"name": "Model", "value": f"{listing.phonemodel}", "inline": True},
                 {"name": "Cena", "value": f"{listing.price} zł", "inline": True},
+                {"name": "User", "value": f"{listing.user}", "inline": False},
+                {"name": "", "value": f"{listing.rate}", "inline": False},
+
             ]
         }
 
@@ -25,10 +30,9 @@ class DiscordWebhookSender:
         }
         response = requests.post(self.webhook_url, json=data)
         if response.status_code == 204:
-            print("Wiadomość wysłana pomyślnie.")
+            print(f"Nowe ogłoszenie:Price: {listing.price} {listing.title}")
         else:
             print(f"Błąd podczas wysyłania wiadomości: {response.status_code} - {response.text}")
-
 
 
 
