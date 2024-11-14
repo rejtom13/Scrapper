@@ -629,8 +629,8 @@ class VintedPhoneListing(VintedListing):
         # Tworzymy zapytanie SQL do wstawienia danych do tabeli
         sql = """
         INSERT INTO listings (
-            title, imageUrl, location, url, price, description, isDelivery, memory, phonemodel, state, color, listingId, createDate, endDate, page
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            title, imageUrl, location, url, price, description, isDelivery, memory, brand, phonemodel, state, color, listingId, createDate, endDate, page
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s)
         """
 
         # Przekazujemy dane do zapytania
@@ -643,6 +643,7 @@ class VintedPhoneListing(VintedListing):
             self.description,
             self.isDelivery,
             self.builtinmemory_phones,
+            self.brand,
             self.phonemodel,
             self.state,
             self.color,
@@ -661,7 +662,7 @@ class VintedPhoneListing(VintedListing):
     #
     def check_is_deal(self):
         if self.price > 0:
-            if  self.phonemodel == 'iPhone 11' and self.price <= 400\
+            if  self.phonemodel == 'iPhone 11' and self.price <= 450\
             or  self.phonemodel == 'iPhone 11 Pro' and self.price <= 500\
             or  self.phonemodel == 'iPhone 11 Pro Max' and self.price <= 700\
             or  self.phonemodel == 'iPhone 12' and self.price <= 600\

@@ -58,4 +58,3 @@ class OlxList:
             return data['listing']['listing']['ads'], data['listing']['listing']['totalPages']
         except:
             print(data)
-

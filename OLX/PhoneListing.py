@@ -17,7 +17,7 @@ class PhoneListing(Listing):
         self.page: str = 'OLX'  # Dodanie pola 'page', jeśli jest obecne w danych
         self.listing_id: str = data.get('id', '')  # Dodanie pola 'listingId', jeśli jest obecne w danych
         self.isDeal: bool = self.check_is_deal()
-        self.user: str = ''
+
         self.rate: str = ''
 
     def save_to_db(self, db_connection) -> None:

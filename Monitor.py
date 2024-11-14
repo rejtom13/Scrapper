@@ -21,8 +21,7 @@ if __name__ == "__main__":
         # 'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1731337465&search_text=&catalog_ids=3001&brand_ids=54661&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids=',
         'https://www.olx.pl/elektronika/telefony/smartfony-telefony-komorkowe/iphone/?search%5Border%5D=created_at:desc',
         'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1729855080&search_text=&catalog_ids=2999&price_to=&currency=PLN&order=newest_first&brand_ids=54661&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&sim_lock_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids=',
-
-
+        # 'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1731597563&search_text=&catalog_ids=2999&order=newest_first&brand_ids=109048,201078,177282,1843136,504726,441470,70294,165462&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&sim_lock_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids='
     ]
     p = Proxy()
     v = VintedList(p.proxy_list)
@@ -35,14 +34,14 @@ if __name__ == "__main__":
                 for listing in listings:
                     ad = PhoneListing(listing)
                     if str(ad.listing_id) not in existing_listings_id:
-                        ad.save_to_db(db)
                         existing_listings_id.append(str(ad.listing_id))
                         i = i+1
                         print(f'Dodano {i} ogłoszeń do bazy')
                         if ad.isDeal and ad.isDelivery == 'BuyWithDelivery':
                             ad.rate = o.rate_ad(ad.description)
+                            ad.get_user()
                             discord.send_phone_listing(ad)
-
+                        ad.save_to_db(db)
                 print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] Sprawdzono nowe ogłoszenia OLX')
             elif 'vinted' in olx_url:
                 listings = v.get_vinted_list(olx_url)
@@ -50,7 +49,6 @@ if __name__ == "__main__":
                     ad = VintedPhoneListing(listing)
                     if str(ad.listing_id) not in existing_listings_id:
                         ad.get_phone_details(v.cookies, v.proxy)
-                        ad.save_to_db(db)
                         i = i + 1
                         print(f'Dodano {i} ogłoszeń do bazy')
                         existing_listings_id.append(str(ad.listing_id))
@@ -58,5 +56,6 @@ if __name__ == "__main__":
                             discord.send_phone_listing(ad)
                             ad.rate = o.rate_ad(ad.description)
                             discord.send_phone_listing(ad)
+                        ad.save_to_db(db)
                 print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] Sprawdzono nowe ogłoszenia Vinted')
         sleep(15)

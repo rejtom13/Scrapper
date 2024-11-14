@@ -17,7 +17,7 @@ class VintedListing:
         self.id: str = data.get('id', '') if data.get('id') else ''
         self.url: str = data.get('url', '') if data.get('url') else ''
         self.image_url: str = data.get('photo', '').get('url','') if data.get('url') else ''
-        self.price: float = float(data.get('total_item_price',  0.0).get('amount',0.0) if data.get('amount') else 0.0)
+        self.price: float = float(data.get('total_item_price',  '').get('amount',0.0))
         self.state: str = data.get('status', '') if data.get('status') else ''
         self.description: str = ''
 
