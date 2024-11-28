@@ -14,11 +14,11 @@ class DiscordWebhookSender:
             "thumbnail": {"url": listing.image_url},
             "fields": [
                 {"name": "Strona", "value": f"{listing.page}", "inline": True},
-                {"name": "Wysyłka", "value": f"{listing.isDelivery}", "inline": True},
+                {"name": "Rekomendacja", "value": f"{listing.recommendation}", "inline": True},
                 {"name": "Stan", "value": f"{listing.state}", "inline": True},
                 {"name": "Pamieć", "value": f"{listing.builtinmemory_phones}", "inline": True},
                 {"name": "Model", "value": f"{listing.phonemodel}", "inline": True},
-                {"name": "Cena", "value": f"{listing.price} zł", "inline": True},
+                {"name": "Max", "value": f"{listing.price} zł", "inline": True},
                 {"name": "User", "value": f"{listing.user}", "inline": False},
                 {"name": "", "value": f"{listing.rate}", "inline": False},
 

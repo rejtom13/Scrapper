@@ -17,8 +17,10 @@ class PhoneListing(Listing):
         self.page: str = 'OLX'  # Dodanie pola 'page', jeśli jest obecne w danych
         self.listing_id: str = data.get('id', '')  # Dodanie pola 'listingId', jeśli jest obecne w danych
         self.isDeal: bool = self.check_is_deal()
-
+        self.recommendation = self.get_recommendation(self.phonemodel)
         self.rate: str = ''
+
+
 
     def save_to_db(self, db_connection) -> None:
         """
@@ -85,7 +87,33 @@ class PhoneListing(Listing):
             # Dodaj więcej modeli, jeśli to konieczne
         }
 
-        # Sprawdź, czy model istnieje w słowniku i czy cena jest w limicie
+        # Sprawdź, czy model istnieje w słowniku i czy Max jest w limicie
         if self.price > 0 and self.phonemodel in price_limits:
             return self.price <= price_limits[self.phonemodel]
         return False
+
+    def get_recommendation(self, model):
+        list = {
+            'iphone-11': 'Max: 450',
+            'iphone-11-pro': 'Max: 500',
+            'iphone-11-pro-max': 'Max: 700 ',
+            'iphone-12': 'Max: 600',
+            'iphone-12-mini': 'Max: 550',
+            'iphone-12-pro': 'Max: 900',
+            'iphone-12-pro-max': 'Max: 1100',
+            'iphone-13': 'Max: 1000',
+            'iphone-13-pro': 'Max: 1200',
+            'iphone-13-mini': 'Max: 800',
+            'iphone-14': 'Max: 1400',
+            'iphone-14-pro': 'Max: 2200',
+            'iphone-14-pro-max': 'Max: 2400',
+            'iphone-14-plus': 'Max: 1700',
+            'iphone-15': 'Max: 2100',
+            'iphone-15-pro': 'Max: 2850',
+            'iphone-15-pro-max': 'Max: 3300',
+            'iphone-15-plus': 'Max: 2400'
+        }
+        try:
+            return list[model]
+        except:
+            return ""

@@ -15,13 +15,11 @@ from Vinted.VintedPhoneListing import VintedPhoneListing
 if __name__ == "__main__":
     db = DbConnection()
     discord = DiscordWebhookSender('https://discord.com/api/webhooks/1283777137924374628/f9-WYqGPWaajevct0le5TDCey0ZRFlUULvwpc8iG0xbkrw0qPAdas7YWAxntf9YyIMZk')
+    # discord = DiscordWebhookSender('https://discord.com/api/webhooks/961347407789047853/nuYwUGTLDc_4x7pDHMr1uuie19lOp--oVWqGfv2c2uYQ5Ggp18FxhkAdZVeXa2rVMZhg')
     existing_listings_id = db.get_all_listing_ids()
     urls = [
-        # 'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1731337106&search_text=&catalog_ids=3035&order=newest_first&size_ids=&brand_ids=54661&status_ids=&color_ids=',
-        # 'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1731337465&search_text=&catalog_ids=3001&brand_ids=54661&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids=',
         'https://www.olx.pl/elektronika/telefony/smartfony-telefony-komorkowe/iphone/?search%5Border%5D=created_at:desc',
-        'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1729855080&search_text=&catalog_ids=2999&price_to=&currency=PLN&order=newest_first&brand_ids=54661&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&sim_lock_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids=',
-        # 'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1731597563&search_text=&catalog_ids=2999&order=newest_first&brand_ids=109048,201078,177282,1843136,504726,441470,70294,165462&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&sim_lock_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids='
+        'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1731756901&search_text=&catalog_ids=2999&order=newest_first&brand_ids=54661,109048,201078&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&sim_lock_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids='
     ]
     p = Proxy()
     v = VintedList(p.proxy_list)
@@ -38,24 +36,25 @@ if __name__ == "__main__":
                         i = i+1
                         print(f'Dodano {i} ogłoszeń do bazy')
                         if ad.isDeal and ad.isDelivery == 'BuyWithDelivery':
-                            ad.rate = o.rate_ad(ad.description)
+                            ad.rate = o.rate_ad_without_photo(ad.description, ad.phonemodel, ad.title,)
                             ad.get_user()
                             discord.send_phone_listing(ad)
                         ad.save_to_db(db)
-                print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] Sprawdzono nowe ogłoszenia OLX')
+                print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] OLX: Sprawdzono: {len(listings)} ogłoszeń')
             elif 'vinted' in olx_url:
                 listings = v.get_vinted_list(olx_url)
-                for listing in listings:
-                    ad = VintedPhoneListing(listing)
-                    if str(ad.listing_id) not in existing_listings_id:
-                        ad.get_phone_details(v.cookies, v.proxy)
-                        i = i + 1
-                        print(f'Dodano {i} ogłoszeń do bazy')
-                        existing_listings_id.append(str(ad.listing_id))
-                        if ad.isDeal:
-                            discord.send_phone_listing(ad)
-                            ad.rate = o.rate_ad(ad.description)
-                            discord.send_phone_listing(ad)
-                        ad.save_to_db(db)
-                print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] Sprawdzono nowe ogłoszenia Vinted')
-        sleep(15)
+                if listings:
+                    for listing in listings:
+                        ad = VintedPhoneListing(listing)
+                        if str(ad.listing_id) not in existing_listings_id:
+                            ad.get_phone_details(v.cookies, v.proxy)
+                            i = i + 1
+                            print(f'Dodano {i} ogłoszeń do bazy')
+                            existing_listings_id.append(str(ad.listing_id))
+                            if ad.isDeal:
+                                discord.send_phone_listing(ad)
+                                ad.rate = o.rate_ad_without_photo(ad.description, ad.phonemodel, ad.title, )
+                                discord.send_phone_listing(ad)
+                            ad.save_to_db(db)
+                    print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] Vinted: Sprawdzono: {len(listings)} ogłoszeń')
+        sleep(10)
