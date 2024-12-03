@@ -18,7 +18,7 @@ class DiscordWebhookSender:
                 {"name": "Stan", "value": f"{listing.state}", "inline": True},
                 {"name": "Pamieć", "value": f"{listing.builtinmemory_phones}", "inline": True},
                 {"name": "Model", "value": f"{listing.phonemodel}", "inline": True},
-                {"name": "Max", "value": f"{listing.price} zł", "inline": True},
+                {"name": "Cena", "value": f"{listing.price} zł", "inline": True},
                 {"name": "User", "value": f"{listing.user}", "inline": False},
                 {"name": "", "value": f"{listing.rate}", "inline": False},
 

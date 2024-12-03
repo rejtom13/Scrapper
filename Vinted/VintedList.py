@@ -54,7 +54,7 @@ class VintedList:
                 return data.get('items', [])
             except (requests.RequestException, json.JSONDecodeError) as e:
                 print(f"Nie udało się pobrać listingów (próba {attempt + 1}): {e}")
-                time.sleep(1)  # Opcjonalnie poczekaj przed ponowną próbą
+                time.sleep(10*attempt)  # Opcjonalnie poczekaj przed ponowną próbą
                 self.cookies = self.fetch_cookies('https://www.vinted.pl/')
                 headers['cookie'] = self.cookies
         print("Nie udało się pobrać listingów po maksymalnej liczbie prób.")

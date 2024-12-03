@@ -1,5 +1,6 @@
 import json
 import time
+from traceback import print_tb
 from typing import Any, Dict
 
 import requests
@@ -25,7 +26,8 @@ class VintedPhoneListing(VintedListing):
         self.photo_list = []
         self.rate = ''
         self.recommendation = self.get_recommendation(self.phonemodel)
-        self.blacklist = ['oskareqq0', 'adrianna785', 'stefanmaniak']
+        self.blacklist = ['oskareqq0', 'adrianna785', 'stefanmaniak', 'ninakolodziej03', 'viintedsprzedazjacek',
+                          'jarusz97', 'wiktorrcloud', 'kacperhl', 'karolinka992210', 'spejsonpucha']
         self.isDeal: bool = self.check_is_deal()
 
 
@@ -592,30 +594,34 @@ class VintedPhoneListing(VintedListing):
                 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0'
             }
             response = requests.get(list_url, headers=headers, proxies=proxy)
-            try:
-                data = (json.loads(response.content))['item']
-            except:
+            if int(response.status_code) == 200:
+                try:
+                    data = (json.loads(response.content))['item']
+                except:
+                    print(response.status_code)
+                    print(response.content)
+
+                self.phonemodel = self.get_model_name_by_id(data['collection_id'])
+                self.description = data['description']
+                self.color = data['color1']
+                self.created_date = data.get('created_at_ts', '') if data.get('created_at_ts') else ''
+                self.location = data.get('country', '') if data.get('country') else ''
+
+                for attribute in data["description_attributes"]:
+                    if attribute["code"] == "internal_memory_capacity":
+                        self.builtinmemory_phones = attribute["value"]
+                        break
+                self.isDeal = self.check_is_deal()
+                self.username = data['user']['login']
+                self.user = f"{data['user']['login']} Items: {data['user']['given_item_count']}/{data['user']['taken_item_count']} Feedback: {data['user']['positive_feedback_count']}/{data['user']['neutral_feedback_count']}/{data['user']['negative_feedback_count']}"
+                photos = data.get("photos", [])
+                self.photo_list= [photo.get("url") for photo in photos if "url" in photo]
+                self.isDeal: bool = self.check_is_deal()
+                self.recommendation = self.get_recommendation(self.phonemodel)
+                return(data)
+            else:
                 print(response.status_code)
                 print(response.content)
-
-            self.phonemodel = self.get_model_name_by_id(data['collection_id'])
-            self.description = data['description']
-            self.color = data['color1']
-            self.created_date = data.get('created_at_ts', '') if data.get('created_at_ts') else ''
-            self.location = data.get('country', '') if data.get('country') else ''
-
-            for attribute in data["description_attributes"]:
-                if attribute["code"] == "internal_memory_capacity":
-                    self.builtinmemory_phones = attribute["value"]
-                    break
-            self.isDeal = self.check_is_deal()
-            self.username = data['user']['login']
-            self.user = f"{data['user']['login']} Items: {data['user']['given_item_count']}/{data['user']['taken_item_count']} Feedback: {data['user']['positive_feedback_count']}/{data['user']['neutral_feedback_count']}/{data['user']['negative_feedback_count']}"
-            photos = data.get("photos", [])
-            self.photo_list= [photo.get("url") for photo in photos if "url" in photo]
-            self.isDeal: bool = self.check_is_deal()
-            return(data)
-
 
     def save_to_db(self, db_connection) -> None:
         """
@@ -685,7 +691,7 @@ class VintedPhoneListing(VintedListing):
                 return False
 
     def get_recommendation(self, model):
-        model1= model.strip()
+        model1= str(model).strip()
         list = {
                 'iphone-11': 'Max: 450',
                 'iphone-11 Pro': 'Max: 500',

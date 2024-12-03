@@ -11,27 +11,27 @@ class OpenAIAgent:
                 {"role": "system", "content": "Jesteś doradcą zakupowym i Twoim zadaniem jest analizowanie opisu produktu "},
                 {
                     "role": "user",
-                    "content": f"""Twoim zadaniem jest zweryfikować opis produktu z ogłoszenia i na jego podstawie określić 
-                    czy jest informacja o uszkodzonym ekranie, uszkodzonym tyle telefonu, 
-                    uszkodzonym wifi/bluetooth/odczycie sieci komórkowej/, faceid, uszkodzonym aparcie, 
-                    czy nie jest zablokowany, jaka jest kondycja/pojemność ( w domyśle baterii) lub czy są jakieś inne informacje 
-                    o wadach oraz na podstawie opisu i tytyłu {title} porównać z modelem {model} i zrócić niformację 
-                    czy model jest poprawny. Poniżej opis który należy zweryfikować: 
-                    {description},
-                    Odpowiedź podaj języku polskim w postaci bez wstępu i podsumowania, skorzystaj z (takich opcji: 
-                        :white_check_mark: (jeśli dana cecha jest sprawna/brak uszkodzeń)
-                        :x: (jeśli występuje wada + dodaj komenatrz na czym polega wada)
-                        brak danych (jeśli brak informacji w opisie): 
-                    **\nModel**: 
-                    **\nWyświetlacz**: 
-                    **\nTył**: 
-                    **\nApart przód/tył**: 
-                    **\nFaceID**: 
-                    **\nWifi/Bluetooth/Sieć komórkowa**:
-                    **\nBlokada**: 
-                    **\nPudełko**: 
-                    **\nKondycja baterii**: (podaj tylko liczbę jeśli jest) %
-                    **\nInne wady**: 
+                    "content": f"""Twoim zadaniem jest zweryfikować opis produktu z ogłoszenia i na jego podstawie dostarczyć szczegółowe informacje o stanie urządzenia oraz ocenić zgodność modelu podanego w tytule, opisie oraz wszelkich innych wzmiankach. Użyj następujących oznaczeń przy ocenie każdej właściwości: :white_check_mark: (sprawne/brak uszkodzeń), :x: (występuje wada. Dodaj komentarz na czym polega wada), brak danych (jeśli brak informacji w opisie).
+
+                    Kroki do wykonania:
+                    **Oceń stan urządzenia**: Na podstawie dostępnych informacji dokonaj oceny poszczególnych cech wymienionych poniżej.
+                    
+                    Poniżej zweryfikuj te elementy dla urządzenia i zwróc tylko tę listę poniżej jako szablon wiadomosci.:
+                    
+                    **Model**: **  
+                    **Wyświetlacz**: **  
+                    **Tył**: **  
+                    **Aparat przód/tył**: **  
+                    **FaceID**: **  
+                    **Wifi/Bluetooth/Sieć komórkowa**: **  
+                    **Blokada**: **  
+                    **Pudełko**: **  
+                    **Kondycja baterii**: (podaj tylko procent, jeśli jest dostępny) %  
+                    **Inne wady**: **  
+                    
+                    Opis do weryfikacji: {description}
+                    Tytuł do weryfikacji: {title}
+                    Model do weryfikacji: {model}
                 """
                 }
             ]
@@ -53,7 +53,7 @@ class OpenAIAgent:
             {description},
             Odpowiedź podaj języku polskim w postaci bez wstępu i podsumowania, skorzystaj z (takich opcji: 
                 :white_check_mark: (jeśli dana cecha jest sprawna/brak uszkodzeń)
-                :x: (jeśli występuje wada + dodaj komentarz na czym polega wada)
+                :x: (jeśli występuje wada + dodaj komentarz (koniecznie po polsku) na czym polega wada)
                 brak danych (jeśli brak informacji w opisie): 
             **\nModel**: 
             **\nWyświetlacz**: 
