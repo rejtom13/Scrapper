@@ -19,7 +19,7 @@ if __name__ == "__main__":
     existing_listings_id = db.get_all_listing_ids()
     urls = [
         # 'https://www.olx.pl/elektronika/telefony/smartfony-telefony-komorkowe/iphone/?search%5Border%5D=created_at:desc',
-        'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=96&time=1731756901&search_text=&catalog_ids=2999&order=newest_first&brand_ids=54661,109048,201078&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&sim_lock_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids='
+        'https://www.vinted.pl/api/v2/catalog/items?page=1&per_page=16&time=1731756901&search_text=&catalog_ids=2999&order=newest_first&brand_ids=54661,109048,201078&brand_collection_ids=&status_ids=&color_ids=&internal_memory_capacity_ids=&sim_lock_ids=&cosmetic_condition_with_screen_ids=&cosmetic_condition_no_screen_ids='
     ]
     p = Proxy()
     v = VintedList(p.proxy_list)
@@ -57,4 +57,4 @@ if __name__ == "__main__":
                                 discord.send_phone_listing(ad)
                             ad.save_to_db(db)
                     print(f'[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] Vinted: Sprawdzono: {len(listings)} ogłoszeń')
-        sleep(2)
+            sleep(3)

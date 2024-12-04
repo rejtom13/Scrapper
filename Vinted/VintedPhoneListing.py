@@ -27,7 +27,7 @@ class VintedPhoneListing(VintedListing):
         self.rate = ''
         self.recommendation = self.get_recommendation(self.phonemodel)
         self.blacklist = ['oskareqq0', 'adrianna785', 'stefanmaniak', 'ninakolodziej03', 'viintedsprzedazjacek',
-                          'jarusz97', 'wiktorrcloud', 'kacperhl', 'karolinka992210', 'spejsonpucha']
+                          'jarusz97', 'wiktorrcloud', 'kacperhl', 'karolinka992210', 'spejsonpucha', 'kacperohlg']
         self.isDeal: bool = self.check_is_deal()
 
 
